@@ -168,7 +168,7 @@
 
   <div class="progress" id="progressBar"></div>
 
-  <!-- STEP 0: Welcome / What's new for 2027 -->
+   <!-- STEP 0: Welcome / What's new for 2027 -->
   <div class="card step" id="step0">
     <span class="badge">STEP 1 OF 4</span>
     <h2>Welcome back! Here's what's new for 2027</h2>
@@ -179,11 +179,6 @@
       <li><b>Curriculum change for Grade RR and Grade R -</b> <em>British International Curriculum with CAPS Integration</em></li>
       <li><b>Book fee for Grade R only:</b> <em>R650</em></li>
     </ul>
-    <p style="font-size:0.88rem;color:var(--muted)">This form takes about 5 minutes. If your child is returning, you'll review and sign the updated 2027 Enrolment &amp; Indemnity Agreement at the end &mdash; no printing needed.</p>
-    <div class="btn-row">
-      <button class="btn-primary" onclick="goTo(1)">Get Started</button>
-    </div>
-  </div>
 
   <!-- STEP 1: Child & contact details -->
   <div class="card step" id="step1" style="display:none">
@@ -354,7 +349,7 @@
 // ======= CONFIGURATION =======
 // Paste the Web App URL you get after deploying the Apps Script (Code.gs) here:
 const CONFIG = {
-  WEB_APP_URL: "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE"
+  WEB_APP_URL: "https://script.google.com/macros/s/AKfycbwl5uyjbTku3oDxytb_IbQ0-yW6mGYZcP0kM0JkZK8VFLF59yGA-MEzZ9ZBK1InTwVl/exec"
 };
 // ================================
 
@@ -521,7 +516,7 @@ function submitForm(){
   hideAllSteps();
   document.getElementById('stepSubmitting').style.display='block';
 
-  if(CONFIG.WEB_APP_URL.indexOf('https://script.google.com/macros/s/AKfycbwl5uyjbTku3oDxytb_IbQ0-yW6mGYZcP0kM0JkZK8VFLF59yGA-MEzZ9ZBK1InTwVl/exec') === 0){
+  if(CONFIG.WEB_APP_URL.indexOf('PASTE_YOUR') === 0){
     // Setup not finished yet - show a friendly message instead of failing silently
     setTimeout(()=>{
       hideAllSteps();
@@ -531,13 +526,19 @@ function submitForm(){
     return;
   }
 
+  // Apps Script Web Apps redirect every request through script.googleusercontent.com,
+  // and that redirected response usually doesn't carry CORS headers — so a normal
+  // 'cors' fetch throws a "Failed to fetch" error in the browser EVEN THOUGH the
+  // script ran correctly server-side (the row/email/PDF are still created).
+  // Using 'no-cors' avoids that false failure; we just can't read the JSON back,
+  // so we show success once the request completes without a real network error.
   fetch(CONFIG.WEB_APP_URL, {
     method:'POST',
-    headers: {'Content-Type':'text/plain;charset=utf-8'}, // avoids CORS preflight on Apps Script
+    mode:'no-cors',
+    headers: {'Content-Type':'text/plain;charset=utf-8'},
     body: JSON.stringify(data)
   })
-  .then(r => r.json())
-  .then(res => {
+  .then(() => {
     hideAllSteps();
     document.getElementById('successExtra').innerText = returningChoice === 'Yes'
       ? "A copy of your signed 2027 agreement has been emailed to you."

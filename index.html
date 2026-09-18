@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SpaceKidz Re-Enrolment 2027</title>
+<style>
+  :root{
+    --navy:#1b1440;
+    --navy-2:#2c2265;
+    --accent:#ff9d3d;
+    --accent-2:#ffd23f;
+    --good:#3ecf8e;
+    --bad:#ff6b6b;
+    --card:#ffffff;
+    --text:#20204a;
+    --muted:#6b6b8a;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', Arial, sans-serif;
+    background:linear-gradient(160deg, var(--navy), var(--navy-2));
+    min-height:100vh;
+    padding:24px 12px 60px;
+    color:var(--text);
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .header{
+    text-align:center;
+    color:#fff;
+    margin-bottom:20px;
+  }
+  .header h1{
+    font-size:1.6rem;
+    margin:8px 0 4px;
+  }
+  .header p{margin:0;color:#cfcaf7;font-size:0.95rem;}
+  .rocket{font-size:2.4rem;}
+  .card{
+    background:var(--card);
+    border-radius:16px;
+    padding:24px;
+    box-shadow:0 12px 30px rgba(0,0,0,0.25);
+    margin-bottom:16px;
+  }
+  .progress{
+    display:flex;
+    gap:6px;
+    margin-bottom:18px;
+  }
+  .progress div{
+    flex:1;
+    height:6px;
+    border-radius:3px;
+    background:rgba(255,255,255,0.25);
+  }
+  .progress div.active{background:var(--accent);}
+  h2{font-size:1.2rem;margin-top:0;color:var(--navy);}
+  h3{font-size:1.05rem;color:var(--navy);margin-bottom:6px;}
+  label{
+    display:block;
+    font-weight:600;
+    font-size:0.88rem;
+    margin:14px 0 6px;
+    color:var(--navy);
+  }
+  input[type=text], input[type=date], input[type=email], input[type=tel], textarea{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #d8d8ea;
+    border-radius:8px;
+    font-size:0.95rem;
+    font-family:inherit;
+  }
+  textarea{min-height:70px;resize:vertical;}
+  .hint{font-size:0.78rem;color:var(--muted);margin-top:4px;}
+  .btn-row{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap;}
+  button{
+    cursor:pointer;
+    border:none;
+    border-radius:10px;
+    padding:12px 20px;
+    font-size:0.95rem;
+    font-weight:700;
+    font-family:inherit;
+  }
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:#e88a2c;}
+  .btn-secondary{background:#eceaf9;color:var(--navy);}
+  .btn-secondary:hover{background:#ddd9f5;}
+  .choice-row{display:flex;gap:14px;margin-top:10px;}
+  .choice-btn{
+    flex:1;
+    padding:22px 10px;
+    border-radius:12px;
+    border:2px solid #d8d8ea;
+    background:#fafafe;
+    text-align:center;
+    font-weight:700;
+    font-size:1.05rem;
+    color:var(--navy);
+  }
+  .choice-btn.selected.yes{border-color:var(--good);background:#eafcf3;}
+  .choice-btn.selected.no{border-color:var(--bad);background:#fff0f0;}
+  .contract-box{
+    max-height:320px;
+    overflow-y:auto;
+    border:1px solid #d8d8ea;
+    border-radius:10px;
+    padding:14px 16px;
+    background:#fbfbff;
+    font-size:0.85rem;
+    line-height:1.5;
+  }
+  .contract-box h4{margin:14px 0 4px;color:var(--navy);}
+  .contract-box p{margin:6px 0;}
+  .row2{display:flex;gap:12px;}
+  .row2 > div{flex:1;}
+  .sig-wrap{border:1px solid #d8d8ea;border-radius:10px;padding:10px;background:#fbfbff;}
+  canvas.sigpad{
+    width:100%;
+    height:140px;
+    background:#fff;
+    border:1px dashed #c7c7e0;
+    border-radius:8px;
+    touch-action:none;
+  }
+  .sig-actions{display:flex;justify-content:space-between;margin-top:6px;}
+  .sig-actions button{padding:6px 12px;font-size:0.78rem;background:#eceaf9;color:var(--navy);}
+  .radio-row{display:flex;gap:20px;margin-top:8px;}
+  .radio-row label{display:flex;align-items:center;gap:6px;font-weight:500;margin:0;}
+  .radio-row input{width:auto;}
+  .checkline{display:flex;align-items:flex-start;gap:8px;margin-top:16px;}
+  .checkline input{width:auto;margin-top:3px;}
+  .checkline label{margin:0;font-weight:500;font-size:0.85rem;}
+  .error{color:var(--bad);font-size:0.82rem;margin-top:6px;display:none;}
+  .success-icon{font-size:3rem;text-align:center;}
+  .badge{
+    display:inline-block;
+    background:#eceaf9;
+    color:var(--navy);
+    padding:2px 10px;
+    border-radius:20px;
+    font-size:0.72rem;
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  .info-list{padding-left:18px;margin:10px 0;}
+  .info-list li{margin-bottom:6px;font-size:0.92rem;}
+  .spinner{
+    width:22px;height:22px;border-radius:50%;
+    border:3px solid #e5e5f2;border-top-color:var(--accent);
+    animation:spin 0.8s linear infinite;
+    margin:0 auto;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  footer{text-align:center;color:#cfcaf7;font-size:0.78rem;margin-top:20px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="rocket">🚀</div>
+    <h1>SpaceKidz Preschool &mdash; 2027 Re-Enrolment</h1>
+    <p>Ravenswood, Boksburg &middot; Please complete this short form for each returning child</p>
+  </div>
+
+  <div class="progress" id="progressBar"></div>
+
+  <!-- STEP 0: Welcome / What's new for 2027 -->
+  <div class="card step" id="step0">
+    <span class="badge">STEP 1 OF 4</span>
+    <h2>Welcome back! Here's what's new for 2027</h2>
+    <ul class="info-list">
+      <li><b>School re-opens:</b> <em>[6 ]</em></li>
+      <li><b>Operating hours:</b> Mon&ndash;Thu 06:15&ndash;17:30, Fri 06:15&ndash;17:00</li>
+      <li><b>Fee increases (if any) and other 2027 updates:</b> <em>[Babies 3 monts to 3 years R3200 p.m and Preschoolers Grade RRR - R (4 - 6 years) R2850 p.m]</em></li>
+    </ul>
+    <p style="font-size:0.88rem;color:var(--muted)">This form takes about 5 minutes. If your child is returning, you'll review and sign the updated 2027 Enrolment &amp; Indemnity Agreement at the end &mdash; no printing needed.</p>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="goTo(1)">Get Started</button>
+    </div>
+  </div>
+
+  <!-- STEP 1: Child & contact details -->
+  <div class="card step" id="step1" style="display:none">
+    <span class="badge">STEP 2 OF 4</span>
+    <h2>Child &amp; contact details</h2>
+    <label>Child's Full Name *</label>
+    <input type="text" id="childName" placeholder="e.g. Amahle Dlamini">
+    <label>Child's Date of Birth *</label>
+    <input type="date" id="childDOB">
+    <label>Parent/Guardian Email (please confirm or update) *</label>
+    <input type="email" id="email" placeholder="parent@email.com">
+    <label>Parent/Guardian Phone Number (please confirm or update) *</label>
+    <input type="tel" id="phone" placeholder="e.g. 082 123 4567">
+    <label>Anything else changed? (address, emergency contact, allergies, pickup arrangements, etc.)</label>
+    <textarea id="otherUpdates" placeholder="Leave blank if nothing has changed"></textarea>
+    <div class="error" id="err1">Please fill in all required fields marked with *.</div>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="goTo(0)">Back</button>
+      <button class="btn-primary" onclick="validateStep1()">Continue</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: Returning? -->
+  <div class="card step" id="step2" style="display:none">
+    <span class="badge">STEP 3 OF 4</span>
+    <h2>Will your child be returning to SpaceKidz in 2027?</h2>
+    <div class="choice-row">
+      <div class="choice-btn" id="choiceYes" onclick="selectReturning('Yes')">✅ Yes, returning</div>
+      <div class="choice-btn" id="choiceNo" onclick="selectReturning('No')">❌ Not returning</div>
+    </div>
+    <div class="error" id="err2">Please select an option.</div>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="goTo(1)">Back</button>
+      <button class="btn-primary" onclick="afterReturningChoice()">Continue</button>
+    </div>
+  </div>
+
+  <!-- STEP 3a: Not returning confirmation -->
+  <div class="card step" id="step3a" style="display:none">
+    <span class="badge">STEP 4 OF 4</span>
+    <h2>Thank you for letting us know</h2>
+    <p>We're sorry your child won't be joining us in 2027 &ndash; it's been a privilege having them at SpaceKidz. We'll record this and won't need anything further from you.</p>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="goTo(2)">Back</button>
+      <button class="btn-primary" onclick="submitForm()">Confirm &amp; Submit</button>
+    </div>
+  </div>
+
+  <!-- STEP 3b: Returning -> Contract -->
+  <div class="card step" id="step3b" style="display:none">
+    <span class="badge">STEP 4 OF 4</span>
+    <h2>2027 Enrolment &amp; Indemnity Agreement</h2>
+    <p style="font-size:0.85rem;color:var(--muted)">Please read the agreement below, complete the parent details, and sign to confirm your child's place for 2027.</p>
+    <div class="contract-box" id="contractBox">
+      <p><b>SpaceKidz (Pty) Ltd</b>, known as SpaceKidz Preschool (&quot;the School&quot;), 7 Cathkin Street, Ravenswood, Boksburg, 1459.</p>
+      <h4>1. Acknowledgement &amp; Acceptance</h4>
+      <p>1.1 The Parent(s)/Guardian(s) accept and agree to abide by all rules, regulations, and conditions of the School.</p>
+      <p>1.2 The School and its employees will not accept liability for any accident, injury, loss, or damages arising while the child attends the School, except in cases of gross negligence or wilful misconduct.</p>
+      <p>1.3 The Parent(s)/Guardian(s) indemnify the School and its employees against any claims that may arise, save where South African law provides otherwise.</p>
+      <h4>2. Health &amp; Medical</h4>
+      <p>2.1 The child has been properly immunised against Whooping Cough, Diphtheria, Tetanus, Polio, and Tuberculosis; proof provided on request.</p>
+      <p>2.2 In an emergency, the School supervisor is authorised to consent to medical treatment under supervision of a medical doctor.</p>
+      <p>2.3 The Parent(s)/Guardian(s) accept responsibility for all medical expenses incurred.</p>
+      <h4>3. Illness &amp; Exclusion Policy</h4>
+      <p>3.1&ndash;3.4 A child showing fever, vomiting, diarrhoea, or contagious symptoms may not attend, and must be symptom-free for 24 hours before returning. Fees remain payable during any exclusion, and additional collection costs may be recovered where applicable.</p>
+      <h4>4. Behaviour, Discipline &amp; Parent Cooperation</h4>
+      <p>4.1&ndash;4.10 The School applies a structured, age-appropriate, positive discipline system (brief time-outs, a star rewards chart). Persistent disruptive behaviour, or abusive conduct by a parent/guardian towards staff or other children, may result in permanent removal with no refund of fees paid.</p>
+      <p><i>By ticking the box below and initialling, you confirm you have read, understood, and agree to Section 4 in full.</i></p>
+      <h4>5. Fees &amp; Payment</h4>
+      <p>5.1 Monthly fees payable in advance by the last day of the preceding month. 5.2 A late-payment penalty of R220 applies after the 5th of each month. 5.3 Non-payment may result in suspension of services and/or legal action. 5.4&ndash;5.5 Fees remain payable regardless of absence, and December fees are payable in advance and non-refundable. 5.6&ndash;5.7 Overdue accounts may be handed to the School's collection agent (Accountability), with all collection costs, tracing fees, commission, and legal costs for the Parent(s)/Guardian(s)' account. 5.8 Fees may be increased annually with 30 days' written notice. 5.9 Discounts are at the School's sole discretion and not guaranteed.</p>
+      <h4>6. Operating Hours, Holidays &amp; Late Collection</h4>
+      <p>Mon&ndash;Thu 06:15&ndash;17:30, Fri 06:15&ndash;17:00. Closed on public holidays (and adjoining Mon/Fri where applicable) and for the December closure period. A late collection fee of R100 per half hour (or part thereof) applies.</p>
+      <h4>7. Termination of Enrolment</h4>
+      <p>7.1 One full calendar month's written notice required. 7.2 No withdrawal notices accepted for Oct/Nov/Dec. 7.3 Failure to give notice results in liability for one month's fees in lieu.</p>
+      <h4>8. Participation in School Events</h4>
+      <p>8.1 A child may not participate in the year-end concert/graduation if fees are outstanding, or if enrolment ends in November without proper notice.</p>
+      <h4>9. Photography &amp; Social Media Consent</h4>
+      <p>9.1&ndash;9.3 The School may photograph/video children for record-keeping, classroom displays, and promotional/marketing material (including website and social media), unless you advise otherwise in writing. A child's full name will never be published alongside their photo without separate written consent.</p>
+      <h4>10. POPIA Compliance</h4>
+      <p>You consent to the School collecting and processing your and your child's personal information under POPIA, for enrolment, administration, and communication purposes.</p>
+      <h4>11. General</h4>
+      <p>This Agreement is binding on both parties, governed by South African law, and may only be amended in writing signed by both the School and the Parent(s)/Guardian(s).</p>
+      <p style="font-size:0.75rem;color:var(--muted)">The clauses above are a plain-language summary of the full Agreement. The complete Agreement, in full legal wording, is generated with your details and signature into the PDF copy you will receive for your records.</p>
+    </div>
+
+    <h3 style="margin-top:20px;">Parent / Guardian Details</h3>
+    <div class="row2">
+      <div>
+        <label>Mother/Guardian Full Name *</label>
+        <input type="text" id="motherName">
+        <label>Mother/Guardian ID Number *</label>
+        <input type="text" id="motherID">
+      </div>
+      <div>
+        <label>Father/Guardian Full Name</label>
+        <input type="text" id="fatherName" placeholder="Leave blank if not applicable">
+        <label>Father/Guardian ID Number</label>
+        <input type="text" id="fatherID">
+      </div>
+    </div>
+
+    <label>Section 4 Acknowledgement &ndash; Parent/Guardian Initials *</label>
+    <input type="text" id="section4Initials" placeholder="e.g. A.D." style="max-width:160px;">
+
+    <label>Photography &amp; Social Media Consent (Clause 9.1) *</label>
+    <div class="radio-row">
+      <label><input type="radio" name="photoConsent" value="Consent" id="pcYes"> I/we consent</label>
+      <label><input type="radio" name="photoConsent" value="No Consent" id="pcNo"> I/we do NOT consent</label>
+    </div>
+
+    <div class="row2">
+      <div>
+        <label>Signed At (Town/City) *</label>
+        <input type="text" id="placeSigned" placeholder="e.g. Boksburg">
+      </div>
+      <div>
+        <label>Date Signed *</label>
+        <input type="date" id="dateSigned">
+      </div>
+    </div>
+
+    <h3 style="margin-top:20px;">Signatures</h3>
+    <label>Mother/Guardian Signature *</label>
+    <div class="sig-wrap">
+      <canvas class="sigpad" id="sigMother"></canvas>
+      <div class="sig-actions"><button type="button" onclick="clearSig('sigMother')">Clear</button><span></span></div>
+    </div>
+    <label>Father/Guardian Signature (if applicable)</label>
+    <div class="sig-wrap">
+      <canvas class="sigpad" id="sigFather"></canvas>
+      <div class="sig-actions"><button type="button" onclick="clearSig('sigFather')">Clear</button><span></span></div>
+    </div>
+
+    <div class="checkline">
+      <input type="checkbox" id="agreeAll">
+      <label>I/we confirm that I/we have read, understood, and agree to the full 2027 SpaceKidz Enrolment &amp; Indemnity Agreement, including all clauses above.</label>
+    </div>
+    <div class="error" id="err3">Please complete all required fields, tick the confirmation box, and provide at least the mother/guardian's signature.</div>
+
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="goTo(2)">Back</button>
+      <button class="btn-primary" onclick="submitForm()">Sign &amp; Submit</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: Submitting / Success -->
+  <div class="card step" id="stepSubmitting" style="display:none">
+    <div class="spinner"></div>
+    <p style="text-align:center;margin-top:14px;">Submitting your form, please wait&hellip;</p>
+  </div>
+
+  <div class="card step" id="stepSuccess" style="display:none">
+    <div class="success-icon">🎉</div>
+    <h2 style="text-align:center;">Thank you!</h2>
+    <p style="text-align:center;">Your 2027 re-enrolment response has been recorded. <span id="successExtra"></span></p>
+  </div>
+
+  <div class="card step" id="stepFail" style="display:none">
+    <h2 style="text-align:center;color:var(--bad);">Something went wrong</h2>
+    <p style="text-align:center;">We couldn't submit your form. Please check your internet connection and try again, or contact the school directly at <b>spacekidzschool@gmail.com</b>.</p>
+    <div class="btn-row"><button class="btn-primary" onclick="submitForm()">Try Again</button></div>
+  </div>
+
+  <footer>SpaceKidz Preschool &middot; 7 Cathkin Street, Ravenswood, Boksburg &middot; spacekidzschool@gmail.com</footer>
+</div>
+
+<script>
+// ======= CONFIGURATION =======
+// Paste the Web App URL you get after deploying the Apps Script (Code.gs) here:
+const CONFIG = {
+  WEB_APP_URL: "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE"
+};
+// ================================
+
+const totalSteps = 4;
+let currentStepIndex = 0;
+const stepOrder = ['step0','step1','step2']; // step3a/step3b chosen dynamically
+let returningChoice = null;
+
+function buildProgress(){
+  const bar = document.getElementById('progressBar');
+  bar.innerHTML = '';
+  for(let i=0;i<totalSteps;i++){
+    const d = document.createElement('div');
+    bar.appendChild(d);
+  }
+}
+buildProgress();
+
+function setProgress(n){
+  const bars = document.querySelectorAll('#progressBar div');
+  bars.forEach((b,i)=> b.classList.toggle('active', i < n));
+}
+
+function hideAllSteps(){
+  document.querySelectorAll('.step').forEach(s=> s.style.display='none');
+}
+
+function goTo(index){
+  hideAllSteps();
+  document.getElementById(stepOrder[index]).style.display='block';
+  currentStepIndex = index;
+  setProgress(index+1);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function validateStep1(){
+  const req = ['childName','childDOB','email','phone'];
+  const ok = req.every(id => document.getElementById(id).value.trim() !== '');
+  document.getElementById('err1').style.display = ok ? 'none' : 'block';
+  if(ok) goTo(2);
+}
+
+function selectReturning(val){
+  returningChoice = val;
+  document.getElementById('choiceYes').classList.toggle('selected', val==='Yes');
+  document.getElementById('choiceYes').classList.toggle('yes', val==='Yes');
+  document.getElementById('choiceNo').classList.toggle('selected', val==='No');
+  document.getElementById('choiceNo').classList.toggle('no', val==='No');
+  document.getElementById('err2').style.display='none';
+}
+
+function afterReturningChoice(){
+  if(!returningChoice){
+    document.getElementById('err2').style.display='block';
+    return;
+  }
+  hideAllSteps();
+  if(returningChoice === 'Yes'){
+    document.getElementById('step3b').style.display='block';
+    // pre-fill today's date
+    const dEl = document.getElementById('dateSigned');
+    if(!dEl.value) dEl.value = new Date().toISOString().slice(0,10);
+    setupSignaturePad('sigMother');
+    setupSignaturePad('sigFather');
+  } else {
+    document.getElementById('step3a').style.display='block';
+  }
+  setProgress(4);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ---- Signature pad ----
+const sigPads = {};
+function setupSignaturePad(canvasId){
+  const canvas = document.getElementById(canvasId);
+  if(canvas.dataset.ready) return;
+  canvas.dataset.ready = '1';
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = canvas.offsetWidth * ratio;
+  canvas.height = canvas.offsetHeight * ratio;
+  const ctx = canvas.getContext('2d');
+  ctx.scale(ratio, ratio);
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#20204a';
+  let drawing = false;
+  sigPads[canvasId] = {canvas, ctx, hasContent:false};
+
+  function pos(e){
+    const rect = canvas.getBoundingClientRect();
+    const t = e.touches ? e.touches[0] : e;
+    return {x: t.clientX - rect.left, y: t.clientY - rect.top};
+  }
+  function start(e){ drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault(); }
+  function move(e){ if(!drawing) return; const p = pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); sigPads[canvasId].hasContent = true; e.preventDefault(); }
+  function end(){ drawing = false; }
+
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  canvas.addEventListener('touchstart', start, {passive:false});
+  canvas.addEventListener('touchmove', move, {passive:false});
+  canvas.addEventListener('touchend', end);
+}
+
+function clearSig(canvasId){
+  const p = sigPads[canvasId];
+  if(!p) return;
+  p.ctx.clearRect(0,0,p.canvas.width,p.canvas.height);
+  p.hasContent = false;
+}
+
+function getSigDataUrl(canvasId){
+  const p = sigPads[canvasId];
+  if(!p || !p.hasContent) return '';
+  return p.canvas.toDataURL('image/png');
+}
+
+// ---- Submit ----
+function collectPayload(){
+  const data = {
+    timestamp: new Date().toISOString(),
+    childName: document.getElementById('childName').value.trim(),
+    childDOB: document.getElementById('childDOB').value,
+    returning: returningChoice,
+    email: document.getElementById('email').value.trim(),
+    phone: document.getElementById('phone').value.trim(),
+    otherUpdates: document.getElementById('otherUpdates').value.trim(),
+    motherName:'', motherID:'', fatherName:'', fatherID:'',
+    section4Initials:'', photoConsent:'', placeSigned:'', dateSigned:'',
+    motherSignature:'', fatherSignature:''
+  };
+  if(returningChoice === 'Yes'){
+    data.motherName = document.getElementById('motherName').value.trim();
+    data.motherID = document.getElementById('motherID').value.trim();
+    data.fatherName = document.getElementById('fatherName').value.trim();
+    data.fatherID = document.getElementById('fatherID').value.trim();
+    data.section4Initials = document.getElementById('section4Initials').value.trim();
+    const pc = document.querySelector('input[name=photoConsent]:checked');
+    data.photoConsent = pc ? pc.value : '';
+    data.placeSigned = document.getElementById('placeSigned').value.trim();
+    data.dateSigned = document.getElementById('dateSigned').value;
+    data.motherSignature = getSigDataUrl('sigMother');
+    data.fatherSignature = getSigDataUrl('sigFather');
+  }
+  return data;
+}
+
+function validateStep3b(data){
+  if(!data.motherName || !data.motherID || !data.section4Initials || !data.photoConsent || !data.placeSigned || !data.dateSigned || !data.motherSignature || !document.getElementById('agreeAll').checked){
+    return false;
+  }
+  return true;
+}
+
+function submitForm(){
+  const data = collectPayload();
+
+  if(returningChoice === 'Yes' && !validateStep3b(data)){
+    document.getElementById('err3').style.display = 'block';
+    return;
+  }
+
+  hideAllSteps();
+  document.getElementById('stepSubmitting').style.display='block';
+
+  if(CONFIG.WEB_APP_URL.indexOf('https://script.google.com/macros/s/AKfycbwl5uyjbTku3oDxytb_IbQ0-yW6mGYZcP0kM0JkZK8VFLF59yGA-MEzZ9ZBK1InTwVl/exec') === 0){
+    // Setup not finished yet - show a friendly message instead of failing silently
+    setTimeout(()=>{
+      hideAllSteps();
+      document.getElementById('stepFail').style.display='block';
+      document.querySelector('#stepFail p').innerHTML = 'This form is not fully set up yet (no Apps Script URL configured). If you are the school, see the setup guide.';
+    }, 400);
+    return;
+  }
+
+  fetch(CONFIG.WEB_APP_URL, {
+    method:'POST',
+    headers: {'Content-Type':'text/plain;charset=utf-8'}, // avoids CORS preflight on Apps Script
+    body: JSON.stringify(data)
+  })
+  .then(r => r.json())
+  .then(res => {
+    hideAllSteps();
+    document.getElementById('successExtra').innerText = returningChoice === 'Yes'
+      ? "A copy of your signed 2027 agreement has been emailed to you."
+      : "";
+    document.getElementById('stepSuccess').style.display='block';
+  })
+  .catch(err => {
+    hideAllSteps();
+    document.getElementById('stepFail').style.display='block';
+  });
+}
+</script>
+</body>
+</html>
